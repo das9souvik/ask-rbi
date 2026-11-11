@@ -24,6 +24,27 @@ def load_dotenv(path: Path = ROOT / ".env") -> None:
 load_dotenv()
 
 
+def use_system_certificates() -> bool:
+    """Verify HTTPS with the operating system's trust store (macOS Keychain, Windows store).
+
+    Standalone Python builds ship their own certificate bundle, which doesn't include
+    certificates your OS already trusts (e.g. from a security app or network that
+    inspects HTTPS). Verification stays fully on; we just use the same trust list
+    as your browser. Set ASK_RBI_SYSTEM_CERTS=0 to disable.
+    """
+    if os.environ.get("ASK_RBI_SYSTEM_CERTS", "1") == "0":
+        return False
+    try:
+        import truststore
+    except ImportError:
+        return False
+    truststore.inject_into_ssl()
+    return True
+
+
+use_system_certificates()
+
+
 def _env(name: str, default: str) -> str:
     return os.environ.get(name, default)
 

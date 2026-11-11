@@ -2,5 +2,6 @@
 numpy>=1.26
 rank-bm25>=0.2.2
 huggingface_hub>=0.30
+truststore>=0.9
 sentence-transformers>=3.0
 gradio>=5.0
