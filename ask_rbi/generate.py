@@ -59,6 +59,65 @@ class HFInferenceLLM:
             return self._call(self.fallback, system, user)
 
 
+class GroqLLM:
+    """Groq's OpenAI-compatible API. Its free tier serves openai/gpt-oss-20b with no card needed."""
+
+    URL = "https://api.groq.com/openai/v1/chat/completions"
+
+    def __init__(self, model: str, api_key: str, fallback: str | None = None,
+                 max_tokens: int = 1500, temperature: float = 0.1, timeout: int = 60):
+        self.model = model
+        self.fallback = fallback
+        self._key = api_key
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.timeout = timeout
+
+    def _call(self, model: str, system: str, user: str) -> str:
+        import json
+        import urllib.request
+
+        body = {
+            "model": model,
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+            "max_completion_tokens": self.max_tokens,
+            "temperature": self.temperature,
+        }
+        if "gpt-oss" in model:
+            body["reasoning_effort"] = "low"  # keep the token budget for the answer itself
+        req = urllib.request.Request(
+            self.URL, data=json.dumps(body).encode(), method="POST",
+            headers={"Authorization": f"Bearer {self._key}", "Content-Type": "application/json",
+                     "User-Agent": "ask-rbi/0.1"},
+        )
+        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+            out = json.loads(resp.read())
+        return (out["choices"][0]["message"].get("content") or "").strip()
+
+    def complete(self, system: str, user: str) -> str:
+        try:
+            return self._call(self.model, system, user)
+        except Exception:
+            if not self.fallback:
+                raise
+            return self._call(self.fallback, system, user)
+
+
+def make_llm(settings) -> LLM:
+    """Groq when GROQ_API_KEY is set (free tier), otherwise Hugging Face Inference Providers."""
+    backend = settings.llm_backend
+    if backend == "auto":
+        backend = "groq" if settings.groq_api_key else "hf"
+    if backend == "groq":
+        if not settings.groq_api_key:
+            raise RuntimeError("ASK_RBI_LLM_BACKEND=groq but GROQ_API_KEY is not set.")
+        return GroqLLM(settings.llm_model, settings.groq_api_key, fallback=settings.groq_fallback_model)
+    if backend == "hf":
+        return HFInferenceLLM(settings.llm_model, settings.hf_token, settings.llm_provider,
+                              fallback=settings.llm_fallback_model)
+    raise ValueError(f"Unknown ASK_RBI_LLM_BACKEND '{backend}' (use auto, groq or hf).")
+
+
 @dataclass
 class Citation:
     tag: str

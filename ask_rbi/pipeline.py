@@ -10,7 +10,7 @@ from pathlib import Path
 from .chunk import Chunk, chunk_pages
 from .config import Settings
 from .embed import Embedder, make_embedder
-from .generate import LLM, REFUSAL, Answer, HFInferenceLLM, answer_question
+from .generate import LLM, REFUSAL, Answer, answer_question, make_llm
 from .index import Index
 from .manifest import load_manifest
 from .parse import parse_pdf
@@ -63,8 +63,7 @@ class AskRBI:
         self.embedder = embedder or make_embedder(settings.embedder, settings.embed_model)
         self.index = index or Index.load(settings.index_dir)
         self.retriever = Retriever(self.index, self.embedder, settings.candidates, settings.rrf_k)
-        self.llm = llm or HFInferenceLLM(settings.llm_model, settings.hf_token, settings.llm_provider,
-                                         fallback=settings.llm_fallback_model)
+        self.llm = llm or make_llm(settings)
         self.min_dense = MIN_DENSE.get(settings.embedder, 0.0)
 
     def ask(self, question: str, doc_ids: set[str] | None = None) -> Result:

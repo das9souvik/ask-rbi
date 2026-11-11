@@ -45,15 +45,20 @@ def main() -> None:
         raise SystemExit("Set HF_TOKEN (a Hugging Face token with write access).")
     # The running Space only needs to call Inference Providers. Give it a separate,
     # fine-grained token limited to that, so a leak can't touch your repos.
+    groq_key = os.environ.get("GROQ_API_KEY")
     space_token = os.environ.get("HF_SPACE_TOKEN")
-    if not space_token:
+    if not space_token and not groq_key:
         raise SystemExit(
-            "Set HF_SPACE_TOKEN: a fine-grained Hugging Face token with only "
+            "Set GROQ_API_KEY (free tier) or HF_SPACE_TOKEN: a fine-grained Hugging Face token with only "
             "'Make calls to Inference Providers' permission. It is stored as a private Space secret."
         )
     api = HfApi(token=token)
     api.create_repo(args.space, repo_type="space", space_sdk="gradio", exist_ok=True)
-    api.add_space_secret(args.space, "HF_TOKEN", space_token)
+    # Secrets are private to the Space; values are never printed.
+    if groq_key:
+        api.add_space_secret(args.space, "GROQ_API_KEY", groq_key)
+    if space_token:
+        api.add_space_secret(args.space, "HF_TOKEN", space_token)
     folder = stage()
     api.upload_folder(folder_path=str(folder), repo_id=args.space, repo_type="space",
                       commit_message="Deploy Ask RBI")

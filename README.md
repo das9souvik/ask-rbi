@@ -45,7 +45,7 @@ flowchart LR
 | Chunking | Split on RBI paragraph numbers (`7.`, `12.3`), ~260 words, small overlap | Keeps rules intact and gives citations like *paras 8–9* instead of "chunk 412". |
 | Retrieval | BM25 + dense embeddings, fused with RRF | Regulations are full of exact terms (V-CIP, EBLR, SMA-2) that keyword search nails and embeddings blur; embeddings catch paraphrases ("close my card" → "closure of credit card"). |
 | Embeddings | `BAAI/bge-small-en-v1.5` (33M params) | Strong retrieval quality, runs on a free CPU Space. |
-| Answer model | `openai/gpt-oss-20b`, fallback `Qwen2.5-7B-Instruct` | Free through Hugging Face Inference Providers; switchable with one environment variable. |
+| Answer model | `openai/gpt-oss-20b` | Open-weights model served free on Groq (set `GROQ_API_KEY`), or through Hugging Face Inference Providers; switchable with one environment variable. |
 | Guardrails | Cite-or-refuse prompt, citation validator, relevance gate | A relevance gate skips the model entirely when nothing relevant is retrieved, which saves cost and stops "creative" answers. |
 
 ## Documents covered (v1)
@@ -73,7 +73,7 @@ Full per-question results are written to [`eval/results.md`](eval/results.md). T
 
 ## Run it yourself
 
-Requires Python 3.11 or 3.12 and a free [Hugging Face token](https://huggingface.co/settings/tokens).
+Requires Python 3.11 or 3.12, plus a free [Groq API key](https://console.groq.com/keys) or a [Hugging Face token](https://huggingface.co/settings/tokens) for the answer model.
 
 ```bash
 git clone https://github.com/das9souvik/ask-rbi && cd ask-rbi

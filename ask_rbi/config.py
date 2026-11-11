@@ -60,11 +60,15 @@ class Settings:
     embedder: str = field(default_factory=lambda: _env("ASK_RBI_EMBEDDER", "bge"))
     embed_model: str = field(default_factory=lambda: _env("ASK_RBI_EMBED_MODEL", "BAAI/bge-small-en-v1.5"))
 
-    # Answer model, served free through Hugging Face Inference Providers.
+    # Answer model: same open model on either backend (Groq free tier or HF Inference Providers).
     llm_model: str = field(default_factory=lambda: _env("ASK_RBI_LLM_MODEL", "openai/gpt-oss-20b"))
     llm_fallback_model: str = field(default_factory=lambda: _env("ASK_RBI_LLM_FALLBACK", "Qwen/Qwen2.5-7B-Instruct"))
     llm_provider: str = field(default_factory=lambda: _env("ASK_RBI_LLM_PROVIDER", "auto"))
     hf_token: str | None = field(default_factory=lambda: os.environ.get("HF_TOKEN"))
+    # "auto" uses Groq's free tier when GROQ_API_KEY is set, else Hugging Face.
+    llm_backend: str = field(default_factory=lambda: _env("ASK_RBI_LLM_BACKEND", "auto"))
+    groq_api_key: str | None = field(default_factory=lambda: os.environ.get("GROQ_API_KEY") or None)
+    groq_fallback_model: str = field(default_factory=lambda: _env("ASK_RBI_GROQ_FALLBACK", "llama-3.1-8b-instant"))
 
     # Chunking and retrieval.
     chunk_words: int = 260
