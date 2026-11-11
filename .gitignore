@@ -1,0 +1,13 @@
+# Downloaded RBI PDFs stay local; data/raw/sources.json records exactly what was used.
+data/raw/*.pdf
+.env
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+build/
+dist/
+space_build/

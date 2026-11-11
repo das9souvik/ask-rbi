@@ -1,0 +1,31 @@
+{"id": "q01", "question": "Can a bank issue a credit card to someone who never asked for it?", "expected_docs": ["cards"], "keywords": ["unsolicited", "consent"]}
+{"id": "q02", "question": "How quickly must a bank close a credit card account after the cardholder asks for closure?", "expected_docs": ["cards"], "keywords": ["closure", "working days"]}
+{"id": "q03", "question": "Can a cardholder change the billing cycle of their credit card?", "expected_docs": ["cards"], "keywords": ["billing cycle"]}
+{"id": "q04", "question": "Can a card network stop a bank from issuing cards on another network?", "expected_docs": ["cards"], "keywords": ["card network", "networks"]}
+{"id": "q05", "question": "What happens if a credit card has not been used for over a year?", "expected_docs": ["cards"], "keywords": ["not been used", "one year", "inactive"]}
+{"id": "q06", "question": "What is Video-based Customer Identification Process (V-CIP) and when can banks use it?", "expected_docs": ["kyc"], "keywords": ["V-CIP", "video"]}
+{"id": "q07", "question": "How often must banks do periodic KYC updation for high-risk customers?", "expected_docs": ["kyc"], "keywords": ["periodic updation", "high risk"]}
+{"id": "q08", "question": "Which documents count as officially valid documents for KYC?", "expected_docs": ["kyc"], "keywords": ["officially valid document", "OVD"]}
+{"id": "q09", "question": "What is a small account under the KYC rules and what limits apply?", "expected_docs": ["kyc"], "keywords": ["small account"]}
+{"id": "q10", "question": "Must floating-rate retail loans be linked to an external benchmark?", "expected_docs": ["rates_advances"], "keywords": ["external benchmark"]}
+{"id": "q11", "question": "How frequently must the interest rate on an external benchmark linked loan be reset?", "expected_docs": ["rates_advances"], "keywords": ["reset", "three months"]}
+{"id": "q12", "question": "Can a bank charge foreclosure or prepayment charges on a floating rate loan taken by an individual?", "expected_docs": ["rates_advances", "rbc", "credit_facilities"], "keywords": ["foreclosure", "pre-payment", "prepayment"]}
+{"id": "q13", "question": "Can a bank add penal charges to the interest rate on a loan?", "expected_docs": ["rbc", "credit_facilities", "rates_advances"], "keywords": ["penal charges"]}
+{"id": "q14", "question": "What must a Key Fact Statement for a retail loan include?", "expected_docs": ["rbc", "credit_facilities", "rates_advances"], "keywords": ["Key Fact Statement", "annual percentage rate"]}
+{"id": "q15", "question": "At what times can recovery agents call a borrower?", "expected_docs": ["rbc", "credit_facilities"], "keywords": ["recovery agents", "8:00", "7:00"]}
+{"id": "q16", "question": "When does a loan become a non-performing asset?", "expected_docs": ["iracp"], "keywords": ["90 days", "non-performing"]}
+{"id": "q17", "question": "What are SMA-1 and SMA-2 accounts?", "expected_docs": ["iracp", "credit_risk", "credit_info"], "keywords": ["special mention", "SMA"]}
+{"id": "q18", "question": "How often must banks report credit information to credit information companies?", "expected_docs": ["credit_info"], "keywords": ["fortnightly", "credit information compan"]}
+{"id": "q19", "question": "Who is a wilful defaulter?", "expected_docs": ["wilful_defaulters"], "keywords": ["wilful default"]}
+{"id": "q20", "question": "Is the interest rate on savings bank deposits fixed by RBI or decided by banks?", "expected_docs": ["rates_deposits"], "keywords": ["savings deposit", "deregulated", "savings"]}
+{"id": "q21", "question": "What interest is paid on a term deposit that has matured but has not been claimed?", "expected_docs": ["rates_deposits"], "keywords": ["matured", "unclaimed", "maturity"]}
+{"id": "q22", "question": "Do payment aggregators have to keep customer funds in an escrow account?", "expected_docs": ["payment_aggregators"], "keywords": ["escrow"]}
+{"id": "q23", "question": "Can a small PPI wallet be used to withdraw cash?", "expected_docs": ["ppi"], "keywords": ["cash withdrawal", "small PPI"]}
+{"id": "q24", "question": "What is the maximum outstanding balance allowed in a full-KYC PPI?", "expected_docs": ["ppi"], "keywords": ["full-KYC", "outstanding"]}
+{"id": "q25", "question": "Does a bank need RBI approval to offer mobile banking?", "expected_docs": ["digital_channels"], "keywords": ["mobile banking", "internet banking", "digital banking channel"]}
+{"id": "o01", "question": "What is the current repo rate?", "expected_docs": [], "keywords": [], "out_of_scope": true}
+{"id": "o02", "question": "Should I buy HDFC Bank shares this year?", "expected_docs": [], "keywords": [], "out_of_scope": true}
+{"id": "o03", "question": "What are SEBI's KYC rules for mutual fund distributors?", "expected_docs": [], "keywords": [], "out_of_scope": true}
+{"id": "o04", "question": "How do I file my income tax return?", "expected_docs": [], "keywords": [], "out_of_scope": true}
+{"id": "o05", "question": "What was India's GDP growth last quarter?", "expected_docs": [], "keywords": [], "out_of_scope": true}
+{"id": "o06", "question": "Write a short poem about Mumbai monsoons.", "expected_docs": [], "keywords": [], "out_of_scope": true}

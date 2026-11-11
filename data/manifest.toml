@@ -1,0 +1,94 @@
+# Ask RBI: document manifest (v1, retail banking set)
+#
+# Source of truth: RBI's consolidated Master Directions issued on 28 November 2025,
+# which replaced older Master Directions and withdrew 9,445 circulars.
+#
+# Each entry needs a stable `id` and the exact RBI `title`.
+# `notification_id` is the Id in https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=<n>.
+# When it is blank, `ask-rbi fetch` looks the title up on RBI's Master Directions index.
+# The fetcher always checks that the page it lands on matches `title` before downloading.
+
+[[doc]]
+id = "rbc"
+title = "Reserve Bank of India (Commercial Banks – Responsible Business Conduct) Directions, 2025"
+short = "Responsible Business Conduct"
+notification_id = 13140
+pdf_url = "https://rbidocs.rbi.org.in/rdocs/notification/PDFs/170MD.pdf"
+topics = ["customer service", "fair practices", "recovery agents", "grievance redressal", "loan conduct"]
+
+[[doc]]
+id = "kyc"
+title = "Reserve Bank of India (Commercial Banks – Know Your Customer) Directions, 2025"
+short = "Know Your Customer"
+notification_id = 13141
+topics = ["KYC", "CDD", "V-CIP", "officially valid documents", "periodic updation"]
+
+[[doc]]
+id = "cards"
+title = "Reserve Bank of India (Commercial Banks – Credit Cards and Debit Cards: Issuance and Conduct) Directions, 2025"
+short = "Credit and Debit Cards"
+notification_id = 13155
+topics = ["credit cards", "debit cards", "billing", "card closure", "co-branding"]
+
+[[doc]]
+id = "credit_facilities"
+title = "Reserve Bank of India (Commercial Banks – Credit Facilities) Directions, 2025"
+short = "Credit Facilities"
+notification_id = 13156
+topics = ["loans", "advances", "guarantees", "lending restrictions"]
+
+[[doc]]
+id = "rates_advances"
+title = "Reserve Bank of India (Commercial Banks – Interest Rates on Advances) Directions, 2025"
+short = "Interest Rates on Advances"
+notification_id = 13149
+topics = ["EBLR", "MCLR", "floating rate", "interest reset"]
+
+[[doc]]
+id = "rates_deposits"
+title = "Reserve Bank of India (Commercial Banks – Interest Rate on Deposits) Directions, 2025"
+short = "Interest Rate on Deposits"
+topics = ["savings deposits", "term deposits", "premature withdrawal"]
+
+[[doc]]
+id = "iracp"
+title = "Reserve Bank of India (Commercial Banks – Income Recognition, Asset Classification and Provisioning) Directions, 2025"
+short = "Asset Classification and Provisioning"
+topics = ["NPA", "SMA", "provisioning", "asset classification"]
+
+[[doc]]
+id = "credit_risk"
+title = "Reserve Bank of India (Commercial Banks – Credit Risk Management) Directions, 2025"
+short = "Credit Risk Management"
+topics = ["credit risk", "loan appraisal", "risk management"]
+
+[[doc]]
+id = "credit_info"
+title = "Reserve Bank of India (Commercial Banks – Credit Information Reporting) Directions, 2025"
+short = "Credit Information Reporting"
+topics = ["credit bureaus", "CIC reporting", "credit report"]
+
+[[doc]]
+id = "wilful_defaulters"
+title = "Reserve Bank of India (Commercial Banks – Treatment of Wilful Defaulters and Large Defaulters) Directions, 2025"
+short = "Wilful and Large Defaulters"
+topics = ["wilful default", "large defaulters"]
+
+[[doc]]
+id = "digital_channels"
+title = "Reserve Bank of India (Commercial Banks – Digital Banking Channels Authorisation) Directions, 2025"
+short = "Digital Banking Channels"
+topics = ["internet banking", "mobile banking", "authorisation"]
+
+[[doc]]
+id = "payment_aggregators"
+title = "Reserve Bank of India (Regulation of Payment Aggregators) Directions, 2025"
+short = "Payment Aggregators"
+topics = ["payment aggregators", "escrow", "merchant onboarding"]
+
+[[doc]]
+id = "ppi"
+title = "Master Directions on Prepaid Payment Instruments (PPIs)"
+short = "Prepaid Payment Instruments"
+notification_id = 12156
+topics = ["PPI", "wallets", "full-KYC PPI", "small PPI"]
