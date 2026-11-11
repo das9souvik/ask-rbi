@@ -65,13 +65,15 @@ class GroqLLM:
     URL = "https://api.groq.com/openai/v1/chat/completions"
 
     def __init__(self, model: str, api_key: str, fallback: str | None = None,
-                 max_tokens: int = 1500, temperature: float = 0.1, timeout: int = 60):
+                 max_tokens: int = 1500, temperature: float = 0.1, timeout: int = 60,
+                 max_wait_retries: int = 8):
         self.model = model
         self.fallback = fallback
         self._key = api_key
         self.max_tokens = max_tokens
         self.temperature = temperature
         self.timeout = timeout
+        self.max_wait_retries = max_wait_retries
 
     def _call(self, model: str, system: str, user: str) -> str:
         import json
@@ -90,17 +92,38 @@ class GroqLLM:
             headers={"Authorization": f"Bearer {self._key}", "Content-Type": "application/json",
                      "User-Agent": "ask-rbi/0.1"},
         )
-        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-            out = json.loads(resp.read())
-        return (out["choices"][0]["message"].get("content") or "").strip()
+        import time
+        import urllib.error
+
+        for attempt in range(self.max_wait_retries + 1):
+            try:
+                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                    out = json.loads(resp.read())
+                return (out["choices"][0]["message"].get("content") or "").strip()
+            except urllib.error.HTTPError as exc:
+                # Free tier: 429 means "tokens per minute" used up. Wait it out, don't switch model.
+                if exc.code != 429 or attempt == self.max_wait_retries:
+                    raise
+                time.sleep(_retry_after_seconds(exc.headers, attempt))
+        raise RuntimeError("unreachable")
 
     def complete(self, system: str, user: str) -> str:
         try:
             return self._call(self.model, system, user)
-        except Exception:
-            if not self.fallback:
+        except Exception as exc:
+            if not self.fallback or getattr(exc, "code", None) == 429:
                 raise
             return self._call(self.fallback, system, user)
+
+
+def _retry_after_seconds(headers, attempt: int) -> float:
+    """Seconds to wait after a 429, from Retry-After if present, else exponential backoff."""
+    value = headers.get("retry-after") if headers else None
+    try:
+        wait = float(value) if value is not None else 2.0 * 2**attempt
+    except ValueError:
+        wait = 2.0 * 2**attempt
+    return min(max(wait, 1.0), 60.0) + 0.5
 
 
 def make_llm(settings) -> LLM:

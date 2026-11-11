@@ -68,7 +68,8 @@ class Settings:
     # "auto" uses Groq's free tier when GROQ_API_KEY is set, else Hugging Face.
     llm_backend: str = field(default_factory=lambda: _env("ASK_RBI_LLM_BACKEND", "auto"))
     groq_api_key: str | None = field(default_factory=lambda: os.environ.get("GROQ_API_KEY") or None)
-    groq_fallback_model: str = field(default_factory=lambda: _env("ASK_RBI_GROQ_FALLBACK", "llama-3.1-8b-instant"))
+    # Optional second Groq model for non-rate-limit errors; empty means none.
+    groq_fallback_model: str | None = field(default_factory=lambda: os.environ.get("ASK_RBI_GROQ_FALLBACK") or None)
 
     # Chunking and retrieval.
     chunk_words: int = 260
