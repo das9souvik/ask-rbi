@@ -57,3 +57,24 @@ def test_parse_citations_dedupes(synthetic_chunks):
     hits = make_retriever(synthetic_chunks).search("credit card", top_k=2)
     cites, invalid = parse_citations("A [S1] B [S1] C [S2]", hits)
     assert [c.tag for c in cites] == ["S1", "S2"] and not invalid
+
+
+def test_answer_without_tags_is_repaired_once():
+    from ask_rbi.chunk import Chunk
+    from ask_rbi.generate import answer_question
+    from ask_rbi.retrieve import Hit
+
+    chunk = Chunk("c1", "cards", "Credit Cards", "Cards", "https://x", "7", None, 1, 1, "Close within seven working days.")
+    hits = [Hit(chunk, 1.0, 1.0, 1.0)]
+
+    class TwoStep:
+        model = "fake"
+        calls = 0
+
+        def complete(self, system, user):
+            self.calls += 1
+            return "Close it within seven working days." if self.calls == 1 else "Close it within seven working days [S1]."
+
+    llm = TwoStep()
+    a = answer_question("How fast must a card be closed?", hits, llm)
+    assert llm.calls == 2 and a.grounded and a.citations[0].doc_id == "cards"

@@ -15,11 +15,16 @@ SYSTEM_PROMPT = f"""You answer questions about Reserve Bank of India (RBI) regul
 
 Rules:
 1. Use ONLY the numbered sources provided. Never use outside knowledge, and never guess numbers, limits or dates.
-2. Cite every factual sentence with its source tag, like [S2]. Use only tags that appear in the sources.
-3. If the sources do not answer the question, reply with exactly: "{REFUSAL}" and nothing else.
+2. Every sentence and every bullet point MUST end with the tag of the source that supports it, like [S2] or [S1][S3]. Use only tags that appear in the sources. An answer without tags is invalid.
+3. If the question is not about RBI rules for banks or payment companies (for example income tax, investing advice, or general knowledge), or the sources do not answer it, reply with exactly: "{REFUSAL}" and nothing else.
 4. If the sources answer only part of it, answer that part and say what is not covered.
 5. Be concise: a direct answer first, then up to 4 short bullet points with key conditions or exceptions.
-6. Plain English. Keep RBI's exact figures and terms (e.g. "seven working days")."""
+6. Plain English. Keep RBI's exact figures and terms (e.g. "seven working days").
+
+Example of the required format:
+A bank must close a credit card within seven working days of the request, if dues are cleared [S1].
+- Delay beyond that attracts a penalty of ₹500 per day [S1].
+- The closure must be confirmed to the cardholder immediately [S2]."""
 
 
 class LLM(Protocol):
@@ -176,6 +181,9 @@ def build_user_prompt(question: str, hits: list[Hit]) -> str:
 
 
 TAG_RE = re.compile(r"\[S(\d+)\]")
+REPAIR_NOTE = ("The answer above has no source tags. Rewrite it with the same facts, ending every sentence and "
+               "bullet with the tag of the source that supports it, like [S1]. Remove anything no source supports. "
+               "Output only the rewritten answer.")
 
 
 def is_refusal(text: str) -> bool:
@@ -208,5 +216,13 @@ def answer_question(question: str, hits: list[Hit], llm: LLM) -> Answer:
     if is_refusal(raw):
         return Answer(question, REFUSAL, refused=True, model=llm.model)
     citations, invalid = parse_citations(raw, hits)
+    if not citations:
+        # Models sometimes answer correctly but drop the tags. Ask once to add them, no new facts.
+        repaired = llm.complete(SYSTEM_PROMPT, build_user_prompt(question, hits) + f"\n\n{raw}\n\n" + REPAIR_NOTE)
+        if is_refusal(repaired):
+            return Answer(question, REFUSAL, refused=True, model=llm.model)
+        rc, ri = parse_citations(repaired, hits)
+        if rc:
+            raw, citations, invalid = repaired, rc, ri
     text = TAG_RE.sub(lambda m: m.group(0) if 1 <= int(m.group(1)) <= len(hits) else "", raw)
     return Answer(question, text.strip(), citations, refused=False, invalid_tags=invalid, model=llm.model)
